@@ -1,1 +1,0 @@
-fft of an stm image
