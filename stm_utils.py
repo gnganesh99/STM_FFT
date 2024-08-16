@@ -45,16 +45,28 @@ class Sxm_Image():
         if self.scan_dir == 'down':
             image = reverse_2D_y(image)
 
+
+        if bkd_scan(channel) == True:
+            image = reverse_2D_x(image)
+
         return image
 
     def get_channels(self):
         ''' Outputs the channel names in the sxm file
-        '''
+        ''' 
         channel_names = []
         for key in self.file.channels:
             channel_names.append(key)
         return channel_names
     
+
+def bkd_scan(channel_name):
+    ch_arr = channel_name.split("_")
+    bkd = False
+    if ch_arr[-1] == "Bkd":
+        bkd = True
+    return bkd
+
 
 def reverse_2D_y(img):
     
@@ -68,6 +80,17 @@ def reverse_2D_y(img):
             
     return img_yr
 
+def reverse_2D_x(img):
+    
+    # Reverses the y_axis of an image. useful to correlate labview coords with real coords
+    
+    img_xr = np.zeros(np.shape(img))
+    
+    for i in range(img.shape[0]):
+        for j in range(img.shape[1]):
+            img_xr[i, j] = img[i, (img.shape[1]-1)-j]
+            
+    return img_xr
 
 
 def linear_corrected(y):
